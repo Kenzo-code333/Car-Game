@@ -270,7 +270,7 @@ export class Game {
       }
       a.slipT = found ? Math.min(3, a.slipT + DT) : Math.max(0, a.slipT - DT * 2);
       const on = a.slipT >= 2;
-      if (on && !a.slipOn && a === this.me) this.toast('SLIPSTREAM!', 'good');
+      if (on && !a.slipOn && a === this.me && this.simT - (this.slipToastT || -9) > 4) { this.slipToastT = this.simT; this.toast('SLIPSTREAM!', 'good'); }
       a.slipOn = on;
     }
   }

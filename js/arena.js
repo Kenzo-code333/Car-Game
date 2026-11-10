@@ -25,7 +25,15 @@ export class Arena {
       _d.set(p.x / r, 0, p.z / r);
       p.x = _d.x * lim; p.z = _d.z * lim;
       const vn = car.vel.dot(_d);
-      if (vn > 0) { car.vel.addScaledVector(_d, -vn * 1.6); if (vn > 5) car.events.push(['wall', vn]); }
+      if (vn > 0) {
+        const before = car.vel.length();
+        car.vel.addScaledVector(_d, -vn * 1.6);
+        const after = car.vel.length(), want = before * 0.8;
+        if (after < want && after > 0.01) car.vel.multiplyScalar(want / after);
+        if (vn > 5) car.events.push(['wall', vn]);
+      }
+      const fo = car.fwd.dot(_d);
+      if (fo > 0) car.fwd.addScaledVector(_d, -fo * 0.9).normalize();
     }
     for (const c of this.pillars) {
       const dx = p.x - c.x, dz = p.z - c.z, d = Math.hypot(dx, dz), min = c.r + 1.2;

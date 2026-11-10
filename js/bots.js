@@ -56,6 +56,14 @@ export function botThink(car, game, out) {
   let brake = false;
   blocks.length = 0;
   if (b.careful) for (const o of game.obstacles) if (o.blocks) o.blocks(car, t, blocks);
+  for (const g of w.gaps) {
+    if (!g.plats.length) continue;
+    const d = w.wrapD(g.s0 - f.s);
+    if (d < -4 || d > 70) continue;
+    const p = g.plats[0], ta = t + Math.max(0, d) / Math.max(12, speed);
+    const c = p.amp * Math.sin(Math.PI * 2 * (ta / p.period + p.phase));
+    blocks.push([-hw - 1, c - p.hw + 1.3], [c + p.hw - 1.3, hw + 1]);
+  }
   for (const e of game.items.ents) {
     if (e.owner === car.id && e.arm > 0) continue;
     _d.subVectors(e.pos, car.pos);

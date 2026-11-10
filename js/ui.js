@@ -219,7 +219,7 @@ export class UI {
       const order = [1, 0, 2];
       head = `<div class="podium">${order.map((i) => top[i] ? `<div class="pod p${i + 1}" style="--c:${hex(top[i].color)};animation-delay:${[0.5, 0.9, 0.1][i]}s"><span class="pname">${esc(top[i].name)}</span><div class="bar"><b>${i + 1}</b></div></div>` : '<div class="pod"></div>').join('')}</div>`;
       body = `<div class="rank">${rk.map((r) => `<div class="rrow ${r.id === mine ? 'me' : ''}"><span>${ordinal(r.place)}</span><span class="dot" style="background:${hex(r.color)}"></span><b>${esc(r.name)}</b>
-        <span>${res.mode === 'coins' ? '🪙 ' + r.coins : res.mode === 'race' ? (r.time != null ? fmtTime(r.time) : 'DNF') : r.out ? 'OUT' : 'WINNER'}</span></div>`).join('')}</div>`;
+        <span>${res.mode === 'coins' ? '🪙 ' + r.coins : res.mode === 'race' ? (r.time != null ? fmtTime(r.time) : 'still racing') : r.out ? 'OUT' : 'WINNER'}</span></div>`).join('')}</div>`;
     }
     const awards = res.awards.length ? `<div class="awards">${res.awards.map((a, i) => `<div class="award" style="animation-delay:${1.2 + i * 0.25}s"><small>${a.title}</small><b style="color:${hex(a.color)}">${esc(a.name)}</b><span>${a.value}</span></div>`).join('')}</div>` : '';
     const btns = ctx.mp ? (ctx.host ? '<button class="btn big primary" data-act="backToLobby">Back to lobby</button>' : '<p class="hint">Waiting for the host…</p>') + '<button class="btn" data-act="leaveLobby">Leave</button>'

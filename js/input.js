@@ -44,12 +44,11 @@ export const input = {
       const v = (i) => (pad.buttons[i] ? pad.buttons[i].value : 0);
       const dead = (x) => (Math.abs(x) < 0.15 ? 0 : (x - Math.sign(x) * 0.15) / 0.85);
       const ax = dead(pad.axes[0] || 0), ay = dead(pad.axes[1] || 0);
-      const gas = Math.max(v(7), b(0) && false ? 1 : 0), brake = v(6);
+      const gas = v(7), brake = v(6);
       if (Math.abs(ax) > Math.abs(s.st)) s.st = ax;
       if (b(14)) s.st = -1; if (b(15)) s.st = 1;
       if (gas - brake !== 0 && s.th === 0) s.th = gas - brake;
       if (Math.abs(ay) > 0.5 && s.ty === 0) s.ty = -Math.sign(ay);
-      else if (s.th !== 0 && s.ty === 0) s.ty = 0;
       s.dr = s.dr || b(0) || b(5);
       s.it = s.it || b(2) || b(1);
       s.rs = s.rs || b(3);

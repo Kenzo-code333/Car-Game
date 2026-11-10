@@ -72,22 +72,22 @@ export function buildEnvironment(scene, theme, world, quality) {
   if (theme.props === 'city') {
     const bm = new THREE.MeshBasicMaterial({ map: windowTexture('#ff4fd8', '#43e8ff'), color: 0xffffff });
     const geo = new THREE.BoxGeometry(1, 1, 1);
-    inst(geo, bm, scatter(Math.round(150 * qn), 26, (x, z) => { const h = 30 + rand() * 110, w = 14 + rand() * 18; return { x, y: gy + h / 2, z, sx: w, sy: h, sz: 14 + rand() * 18, ry: rand() * 3 }; }));
+    inst(geo, bm, scatter(Math.round(150 * qn), 34, (x, z) => { const h = 30 + rand() * 110, w = 14 + rand() * 18; return { x, y: gy + h / 2, z, sx: w, sy: h, sz: 14 + rand() * 18, ry: rand() * 3 }; }));
     inst(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ color: 0xffffff }), scatter(Math.round(40 * qn), 30, (x, z) => ({ x, y: gy + 40 + rand() * 70, z, sx: 10 + rand() * 14, sy: 1.2, sz: 1.2, ry: rand() * 3, c: C([0xff3fd0, 0x3fe8ff, 0xffe23f, 0x7dff5a][Math.floor(rand() * 4)]) })));
     const grid = new THREE.GridHelper(2400, 80, 0x3a2a7a, 0x1c1c4a); grid.position.set(b.cx, gy + 0.1, b.cz); scene.add(grid);
   } else if (theme.props === 'desert') {
-    inst(new THREE.CylinderGeometry(0.72, 1, 1, 7), lam(0xc9703a), scatter(Math.round(70 * qn), 30, (x, z) => { const h = 18 + rand() * 60, w = 14 + rand() * 30; return { x, y: gy + h / 2, z, sx: w, sy: h, sz: w * (0.7 + rand() * 0.6), ry: rand() * 3 }; }));
-    inst(new THREE.CylinderGeometry(0.9, 1, 1, 7), lam(0xe0a060), scatter(Math.round(40 * qn), 30, (x, z) => { const h = 6 + rand() * 12, w = 20 + rand() * 30; return { x, y: gy + h / 2, z, sx: w, sy: h, sz: w, ry: rand() * 3 }; }));
+    inst(new THREE.CylinderGeometry(0.72, 1, 1, 7), lam(0xc9703a), scatter(Math.round(70 * qn), 38, (x, z) => { const h = 18 + rand() * 60, w = 8 + rand() * 12; return { x, y: gy + h / 2, z, sx: w, sy: h, sz: w * (0.7 + rand() * 0.6), ry: rand() * 3 }; }));
+    inst(new THREE.CylinderGeometry(0.9, 1, 1, 7), lam(0xe0a060), scatter(Math.round(40 * qn), 40, (x, z) => { const h = 4 + rand() * 7, w = 10 + rand() * 12; return { x, y: gy + h / 2, z, sx: w, sy: h, sz: w, ry: rand() * 3 }; }));
     inst(new THREE.CylinderGeometry(0.5, 0.6, 1, 6), lam(0x3f9a4a), scatter(Math.round(90 * qn), 14, (x, z) => { const h = 4 + rand() * 6; return { x, y: gy + h / 2, z, sx: 1.6, sy: h, sz: 1.6 }; }));
   } else if (theme.props === 'frozen') {
-    inst(new THREE.ConeGeometry(1, 1, 6), lam(0xdff2ff), scatter(Math.round(60 * qn), 34, (x, z) => { const h = 30 + rand() * 90, w = 24 + rand() * 40; return { x, y: gy + h / 2, z, sx: w, sy: h, sz: w, ry: rand() * 3 }; }));
+    inst(new THREE.ConeGeometry(1, 1, 6), lam(0xdff2ff), scatter(Math.round(60 * qn), 55, (x, z) => { const h = 30 + rand() * 90, w = 14 + rand() * 18; return { x, y: gy + h / 2, z, sx: w, sy: h, sz: w, ry: rand() * 3 }; }));
     const trees = scatter(Math.round(220 * qn), 13, (x, z) => { const h = 7 + rand() * 9; return { x, y: gy + h / 2 + 2, z, sx: 3.2 + rand() * 2, sy: h, sz: 3.2 + rand() * 2 }; });
     inst(new THREE.ConeGeometry(1, 1, 6), lam(0x2f7a5a), trees);
     inst(new THREE.CylinderGeometry(0.4, 0.5, 1, 5), lam(0x6a4a30), trees.map((t) => ({ x: t.x, y: gy + 1, z: t.z, sx: 1, sy: 2.4, sz: 1 })));
     inst(new THREE.OctahedronGeometry(1, 0), new THREE.MeshLambertMaterial({ color: 0x8fdcff, flatShading: true, emissive: 0x124a66 }), scatter(Math.round(50 * qn), 14, (x, z) => { const h = 4 + rand() * 9; return { x, y: gy + h * 0.6, z, sx: 2 + rand() * 2, sy: h, sz: 2 + rand() * 2, ry: rand() * 3 }; }));
   } else if (theme.props === 'volcano') {
-    inst(new THREE.ConeGeometry(1, 1, 6), lam(0x2a1f24), scatter(Math.round(120 * qn), 22, (x, z) => { const h = 14 + rand() * 60, w = 8 + rand() * 20; return { x, y: gy + h / 2 - 1, z, sx: w, sy: h, sz: w, ry: rand() * 3 }; }));
-    inst(new THREE.CylinderGeometry(1, 1.15, 1, 7), lam(0x3a2a2c), scatter(Math.round(50 * qn), 26, (x, z) => { const w = 16 + rand() * 30; return { x, y: gy + 0.6, z, sx: w, sy: 2.5, sz: w * (0.6 + rand() * 0.6), ry: rand() * 3 }; }));
+    inst(new THREE.ConeGeometry(1, 1, 6), lam(0x2a1f24), scatter(Math.round(120 * qn), 30, (x, z) => { const h = 14 + rand() * 60, w = 5 + rand() * 10; return { x, y: gy + h / 2 - 1, z, sx: w, sy: h, sz: w, ry: rand() * 3 }; }));
+    inst(new THREE.CylinderGeometry(1, 1.15, 1, 7), lam(0x3a2a2c), scatter(Math.round(50 * qn), 44, (x, z) => { const w = 10 + rand() * 14; return { x, y: gy + 0.6, z, sx: w, sy: 2.5, sz: w * (0.6 + rand() * 0.6), ry: rand() * 3 }; }));
     const vol = new THREE.Mesh(new THREE.ConeGeometry(260, 300, 8, 1, true), lam(0x2a1a20)); vol.position.set(b.cx + b.r + 250, gy + 150, b.cz - 100); scene.add(vol);
     const cap = new THREE.Mesh(new THREE.CircleGeometry(60, 8), new THREE.MeshBasicMaterial({ color: 0xff7a1a, fog: false })); cap.rotation.x = -Math.PI / 2; cap.position.set(vol.position.x, gy + 262, vol.position.z); scene.add(cap);
   } else if (theme.props === 'sky') {
@@ -100,7 +100,7 @@ export function buildEnvironment(scene, theme, world, quality) {
       for (let j = 0; j < n; j++) clouds.push({ x: x + (rr() - 0.5) * 40, y: y + (rr() - 0.5) * 8, z: z + (rr() - 0.5) * 40, sx: 18 + rr() * 22, sy: 8 + rr() * 8, sz: 18 + rr() * 22 });
     }
     inst(new THREE.IcosahedronGeometry(1, 1), cm, clouds);
-    const isl = scatter(Math.round(26 * qn), 40, (x, z) => { const w = 16 + rand() * 26; return { x, y: gy + 10 + rand() * 50, z, sx: w, sy: w * 1.2, sz: w, rx: Math.PI }; });
+    const isl = scatter(Math.round(26 * qn), 40, (x, z) => { const w = 12 + rand() * 18; return { x, y: gy + 5 + rand() * 25, z, sx: w, sy: w * 1.2, sz: w, rx: Math.PI }; });
     inst(new THREE.ConeGeometry(1, 1, 7), lam(0x8a6a52), isl);
     inst(new THREE.CylinderGeometry(1, 1, 0.12, 7), lam(0x6fd35a), isl.map((t) => ({ x: t.x, y: t.y + t.sy / 2, z: t.z, sx: t.sx, sy: 14, sz: t.sz })));
   }

@@ -301,9 +301,15 @@ export class Track {
       car.pos.addScaledVector(f.R, -sg * over);
       const vl = car.vel.dot(f.R) * sg;
       if (vl > 0) {
-        car.vel.addScaledVector(f.R, -sg * vl * 1.45);
+        // bounce off and glance along the rail: keep most of the speed, never a dead stop
+        const before = car.vel.length();
+        car.vel.addScaledVector(f.R, -sg * vl * 1.35);
+        const after = car.vel.length(), want = before * 0.86;
+        if (after < want && after > 0.01) car.vel.multiplyScalar(want / after);
         if (vl > 5) car.events.push(['wall', vl]);
       }
+      const fo = car.fwd.dot(f.R) * sg;
+      if (fo > 0) car.fwd.addScaledVector(f.R, -sg * fo * 0.9).normalize();
       f.lat = sg * lim;
     }
   }

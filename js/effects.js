@@ -15,7 +15,7 @@ export class Particles {
     const g = new THREE.BufferGeometry();
     g.setAttribute('position', new THREE.BufferAttribute(this.pos, 3));
     g.setAttribute('color', new THREE.BufferAttribute(this.col, 3));
-    this.points = new THREE.Points(g, new THREE.PointsMaterial({ size: 0.55, vertexColors: true, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true }));
+    this.points = new THREE.Points(g, new THREE.PointsMaterial({ size: 0.42, vertexColors: true, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true }));
     this.points.frustumCulled = false; scene.add(this.points);
   }
   emit(p, v, color, life = 0.5, grav = 1, spread = 0) {
@@ -152,7 +152,7 @@ export class Effects {
         p.emit(_v, _b, col, 0.3 + Math.random() * 0.2, 1, 3);
       }
     }
-    if (car.boostT > 0 || car.slipOn) {
+    if (car.boostT > 0) {
       for (let k = 0; k < 2; k++) {
         _v.copy(mp).addScaledVector(car.fwd, -1.9).addScaledVector(car.up, 0.55);
         _a.copy(car.vel).multiplyScalar(0.55).addScaledVector(car.fwd, -6);

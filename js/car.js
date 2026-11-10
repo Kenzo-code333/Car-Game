@@ -9,45 +9,56 @@ let nextTagId = 0;
 export function paintColor(id) { const p = PAINTS.find((x) => x.id === id); return p ? p.color : (typeof id === 'number' ? id : 0xff3b4e); }
 export function trailColor(id) { const p = TRAILS.find((x) => x.id === id); return p ? p.color : 0xff8a2a; }
 
+// Merge several primitives into one vertex-coloured geometry (keeps each car to a handful of draw calls).
+function merged(parts) {
+  const pos = [], nor = [], col = [], c = new THREE.Color(), m = new THREE.Matrix4(), e = new THREE.Euler(), v = new THREE.Vector3(), n3 = new THREE.Matrix3();
+  for (const p of parts) {
+    const g = p.geo.index ? p.geo.toNonIndexed() : p.geo;
+    m.makeRotationFromEuler(e.set(p.rx || 0, 0, p.rz || 0)).setPosition(p.x || 0, p.y || 0, p.z || 0); n3.getNormalMatrix(m);
+    c.setHex(p.color);
+    const P = g.attributes.position, N = g.attributes.normal;
+    for (let i = 0; i < P.count; i++) {
+      v.fromBufferAttribute(P, i).applyMatrix4(m); pos.push(v.x, v.y, v.z);
+      v.fromBufferAttribute(N, i).applyMatrix3(n3).normalize(); nor.push(v.x, v.y, v.z);
+      col.push(c.r, c.g, c.b);
+    }
+    if (g !== p.geo) g.dispose(); p.geo.dispose();
+  }
+  const out = new THREE.BufferGeometry();
+  out.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  out.setAttribute('normal', new THREE.Float32BufferAttribute(nor, 3));
+  out.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+  return out;
+}
+
 export function buildCarMesh(cos = {}, ghost = false) {
   const root = new THREE.Group(), body = new THREE.Group();
   root.add(body);
-  const col = paintColor(cos.paint);
-  const mk = (c, extra = {}) => (ghost
-    ? new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: 0.3, depthWrite: false })
-    : new THREE.MeshLambertMaterial({ color: c, flatShading: true, ...extra }));
-  const paint = mk(col), dark = mk(0x1c1f2b), glass = mk(0x8fd8ff, { emissive: 0x0a2a44 }), trim = mk(0xf4f4f4);
-  const add = (geo, mat, x, y, z, parent = body) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = !ghost; parent.add(m); return m; };
-  add(new THREE.BoxGeometry(1.9, 0.5, 3.7), paint, 0, 0.55, 0);
-  const nose = add(new THREE.BoxGeometry(1.7, 0.32, 1.1), paint, 0, 0.74, -1.25); nose.rotation.x = 0.22;
-  add(new THREE.BoxGeometry(1.5, 0.5, 1.6), glass, 0, 1.02, 0.25);
-  add(new THREE.BoxGeometry(1.56, 0.12, 1.7), paint, 0, 1.3, 0.25);
-  add(new THREE.BoxGeometry(2.0, 0.1, 0.5), dark, 0, 1.28, 1.75);
-  add(new THREE.BoxGeometry(0.12, 0.42, 0.3), dark, -0.8, 1.05, 1.7);
-  add(new THREE.BoxGeometry(0.12, 0.42, 0.3), dark, 0.8, 1.05, 1.7);
-  add(new THREE.BoxGeometry(2.0, 0.16, 0.3), dark, 0, 0.36, -1.85);
-  add(new THREE.BoxGeometry(0.5, 0.06, 3.72), trim, 0, 0.81, 0);
-  if (!ghost) {
-    const hl = new THREE.MeshBasicMaterial({ color: 0xfff6c0 }), tl = new THREE.MeshBasicMaterial({ color: 0xff2a3c });
-    add(new THREE.BoxGeometry(0.4, 0.16, 0.06), hl, -0.62, 0.62, -1.86); add(new THREE.BoxGeometry(0.4, 0.16, 0.06), hl, 0.62, 0.62, -1.86);
-    add(new THREE.BoxGeometry(0.5, 0.14, 0.06), tl, -0.6, 0.66, 1.86); add(new THREE.BoxGeometry(0.5, 0.14, 0.06), tl, 0.6, 0.66, 1.86);
-  }
-  // wheels
+  const col = paintColor(cos.paint), DARK = 0x1c1f2b, GLASS = 0x8fd8ff, TRIM = 0xf4f4f4;
+  const mat = ghost ? new THREE.MeshBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.3, depthWrite: false })
+    : new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: true });
+  const B = (w, h, d, color, x, y, z, rx = 0) => ({ geo: new THREE.BoxGeometry(w, h, d), color, x, y, z, rx });
+  const bodyMesh = new THREE.Mesh(merged([
+    B(1.9, 0.5, 3.7, col, 0, 0.55, 0), B(1.7, 0.32, 1.1, col, 0, 0.74, -1.25, 0.22), B(1.5, 0.5, 1.6, GLASS, 0, 1.02, 0.25),
+    B(1.56, 0.12, 1.7, col, 0, 1.3, 0.25), B(2.0, 0.1, 0.5, DARK, 0, 1.28, 1.75), B(0.12, 0.42, 0.3, DARK, -0.8, 1.05, 1.7),
+    B(0.12, 0.42, 0.3, DARK, 0.8, 1.05, 1.7), B(2.0, 0.16, 0.3, DARK, 0, 0.36, -1.85), B(0.5, 0.06, 3.72, TRIM, 0, 0.81, 0),
+    B(0.4, 0.16, 0.06, 0xfff6c0, -0.62, 0.62, -1.86), B(0.4, 0.16, 0.06, 0xfff6c0, 0.62, 0.62, -1.86),
+    B(0.5, 0.14, 0.06, 0xff2a3c, -0.6, 0.66, 1.86), B(0.5, 0.14, 0.06, 0xff2a3c, 0.6, 0.66, 1.86),
+  ]), mat);
+  bodyMesh.castShadow = !ghost; body.add(bodyMesh);
+  // wheels: one merged geometry shared by all four
   const style = cos.wheel || 'classic';
   const wr = style === 'chunky' ? 0.5 : 0.42, ww = style === 'chunky' ? 0.5 : 0.34;
-  const wg = new THREE.CylinderGeometry(wr, wr, ww, style === 'chunky' ? 8 : 12); wg.rotateZ(Math.PI / 2);
-  const hubMat = style === 'neon' ? new THREE.MeshBasicMaterial({ color: trailColor(cos.trail) }) : mk(style === 'star' ? 0xffd23f : 0xc9ccd6);
+  const hubCol = style === 'neon' ? trailColor(cos.trail) : style === 'star' ? 0xffd23f : 0xc9ccd6;
+  const parts = [{ geo: new THREE.CylinderGeometry(wr, wr, ww, style === 'chunky' ? 8 : 12), color: DARK, rz: Math.PI / 2 }];
+  if (style === 'star') for (let k = 0; k < 3; k++) parts.push(B(ww + 0.04, 0.12, wr * 1.7, hubCol, 0, 0, 0, (k * Math.PI) / 3));
+  else parts.push({ geo: new THREE.CylinderGeometry(wr * 0.55, wr * 0.55, ww + 0.04, 6), color: hubCol, rz: Math.PI / 2 });
+  const wgeo = merged(parts);
+  const wmat = ghost ? mat : style === 'neon' ? new THREE.MeshBasicMaterial({ vertexColors: true }) : mat;
   const wheels = [];
   for (const [x, z] of [[-0.98, -1.2], [0.98, -1.2], [-0.98, 1.25], [0.98, 1.25]]) {
     const piv = new THREE.Group(); piv.position.set(x, wr, z); root.add(piv);
-    const w = new THREE.Group(); piv.add(w);
-    add(wg, dark, 0, 0, 0, w);
-    if (style === 'star') {
-      for (let k = 0; k < 3; k++) { const sp = add(new THREE.BoxGeometry(ww + 0.04, 0.12, wr * 1.7), hubMat, 0, 0, 0, w); sp.rotation.x = (k * Math.PI) / 3; }
-    } else {
-      const hg = new THREE.CylinderGeometry(wr * 0.55, wr * 0.55, ww + 0.04, 6); hg.rotateZ(Math.PI / 2);
-      add(hg, hubMat, 0, 0, 0, w);
-    }
+    const w = new THREE.Mesh(wgeo, wmat); piv.add(w);
     wheels.push({ piv, w, front: z < 0 });
   }
   root.userData = { body, wheels };

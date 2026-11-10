@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Nitro Rush</title>
+<meta name="description" content="Nitro Rush - a browser 3D arcade racing game with drifting, items, obstacle gauntlets and online multiplayer.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏎️</text></svg>">
+<link rel="stylesheet" href="css/style.css">
+<!-- Libraries come straight from a CDN: no build step, no installs. -->
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js" defer></script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="ui"><div class="fatal"><h2>Loading Nitro Rush…</h2><p>If this message stays, check your internet connection (Three.js loads from a CDN) and make sure the page is served over http(s), not opened as a file.</p></div></div>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

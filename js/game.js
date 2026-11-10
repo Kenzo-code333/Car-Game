@@ -217,7 +217,7 @@ export class Game {
       }
       if (inp.hn && !pi.hn) this.emit(['horn', car.id, car.cos.horn || 'beep']);
       pi.th = inp.th; pi.it = inp.it; pi.rs = inp.rs; pi.hn = inp.hn;
-      if (car.finished && this.mode === 'gauntlet') { this.botInp.th = -1; this.botInp.st = 0; this.botInp.dr = false; stepCar(car, this.botInp, DT, this.world, this.simT); }
+      if (car.finished && this.mode === 'gauntlet') { this.botInp.th = -1; this.botInp.st = 0; this.botInp.dr = false; stepCar(car, this.botInp, DT, this.world, this.simT); car.vel.multiplyScalar(0.95); }
       else stepCar(car, inp, DT, this.world, this.simT);
       if (car.wantRespawn) this.respawn(car);
     }

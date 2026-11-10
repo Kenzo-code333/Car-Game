@@ -2,7 +2,7 @@ import { path, ring } from './builder.js';
 
 export const skyRace = {
   id: 'sky-race', name: 'Halo Circuit', world: 'sky', type: 'race', closed: true, width: 16, rails: false,
-  points: ring(28, (a) => [270 * Math.cos(a), 30 + 10 * Math.cos(2 * a), 175 * Math.sin(a)]),
+  points: ring(28, (a) => [265 * Math.cos(a) + 30 * Math.cos(3 * a), 30 + 10 * Math.cos(2 * a), 150 * Math.sin(a) + 34 * Math.sin(3 * a)]),
   items: [0.06, 0.34, 0.6, 0.86],
   loops: [{ at: 0.25, radius: 17 }],
   gaps: [{ at: 0.553, len: 14 }, { at: 0.8, len: 16, platforms: [{ hw: 3.6, amp: 4, period: 4 }] }],
@@ -25,7 +25,7 @@ export const skyGauntlets = [
     .build({ id: 'sky-2', name: 'Loop de Loop', world: 'sky' }),
   path({ w: 12, y: 30 }).st(60).boost().st(40).ob('wind', { len: 120, dir: 1, force: 46 }).st(40).ob('spinner', { speed: 2 }).st(60).jump(18, { H: 3.2 })
     .st(30).turn(-90, 45).st(10).gap(16, { platforms: [{ hw: 3, amp: 3, period: 3 }] }).st(26).gap(16, { platforms: [{ hw: 3, amp: 3, period: 3, phase: 0.5 }] })
-    .st(40).boost(0, { pow: 15 }).st(60).loop(15).st(60).turn(90, 45).ob('wind', { len: 100, dir: -1, force: 46, phase: 0.4 }).st(30).ob('hammer', { period: 2.6 })
+    .st(40).boost(0, { pow: 15 }).st(60).loop(15).st(60).turn(90, 58).st(30).ob('wind', { len: 90, dir: -1, force: 40, phase: 0.4 }).ob('hammer', { period: 2.6 })
     .st(40).ob('hammer', { period: 2.6, phase: 0.5 }).st(30).boost().st(30).jump(24, { H: 4, len: 11 }).st(40).ob('slider', { period: 3.2 }).st(50)
     .gap(14, { platforms: [{ hw: 3, amp: 3, period: 2.6 }] }).st(90)
     .build({ id: 'sky-3', name: 'Stratosphere', world: 'sky' }),

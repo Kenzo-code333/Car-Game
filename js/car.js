@@ -62,7 +62,7 @@ function nameTag(name, color) {
   g.fillStyle = '#' + new THREE.Color(color).lerp(new THREE.Color(0xffffff), 0.5).getHexString(); g.fillText(name, 128, 32);
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
   const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, transparent: true, depthWrite: false }));
-  s.scale.set(5, 1.25, 1); s.position.y = 2.9;
+  s.scale.set(3.6, 0.9, 1); s.position.y = 2.6;
   return s;
 }
 

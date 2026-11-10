@@ -36,8 +36,8 @@ class Showroom {
     this.turn.rotation.y += dt * 0.5;
     const wide = aspect > 1.2;
     camera.up.set(0, 1, 0);
-    camera.position.set(wide ? -3.2 : 0, 2.6, wide ? 8.5 : 11);
-    camera.lookAt(wide ? -3.2 : 0, 0.9, 0);
+    camera.position.set(wide ? 3.4 : 0, 2.6, wide ? 8.5 : 11);
+    camera.lookAt(wide ? 3.4 : 0, 0.9, 0);
     this.turn.position.x = 0;
     if (camera.fov !== 50) { camera.fov = 50; camera.updateProjectionMatrix(); }
   }

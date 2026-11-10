@@ -3,7 +3,7 @@ import { path, ring } from './builder.js';
 export const neonRace = {
   id: 'neon-race', name: 'Midnight Loop', world: 'neon', type: 'race', closed: true, width: 15, rails: true,
   // figure-eight with an overpass
-  points: ring(28, (a) => [230 * Math.sin(a), 6 + 6 * Math.cos(a), 150 * Math.sin(2 * a)]),
+  points: ring(28, (a) => [200 * Math.sin(a), 6 + 6 * Math.cos(a), 125 * Math.sin(2 * a) + 28 * Math.sin(4 * a)]),
   items: [0.08, 0.33, 0.58, 0.83],
   obstacles: [
     { type: 'boost', at: 0.04, lat: 0 }, { type: 'boost', at: 0.2, lat: -4 }, { type: 'boost', at: 0.2, lat: 4 },

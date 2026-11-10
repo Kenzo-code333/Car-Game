@@ -45,7 +45,7 @@ export function botThink(car, game, out) {
   // racing line: lean to the inside of upcoming corners, plus personal wobble
   const look = 9 + speed * 0.42;
   const kNear = w.curvatureAt(f.s + look), kFar = w.curvatureAt(f.s + 10 + speed * 0.9);
-  let want = clamp(kNear * 30, -0.62, 0.62) * hw + Math.sin(t * 0.35 * b.wob + b.phase) * hw * 0.22 * (1 - Math.min(1, Math.abs(kNear) * 40));
+  let want = clamp(kNear * 30, -0.5, 0.5) * hw + Math.sin(t * 0.35 * b.wob + b.phase) * hw * 0.16 * (1 - Math.min(1, Math.abs(kNear) * 40));
   // things to aim for
   if (b.careful || car.diff > 0) for (const o of game.obstacles) {
     if (!o.attract) continue;
@@ -67,16 +67,17 @@ export function botThink(car, game, out) {
     if (fl == null) brake = true; else want = fl;
   }
   b.lat += (want - b.lat) * Math.min(1, 6 / 60 + (1 - b.d.react) * 0.1);
-  w.posAt(f.s + look, clamp(b.lat, -hw + 1.6, hw - 1.6), 0, _t);
+  const edge = f.rail ? 1.6 : 3.2;
+  w.posAt(f.s + look, clamp(b.lat, -hw + edge, hw - edge), 0, _t);
   const ang = steerTo(car, _t);
   out.st = clamp(ang * 3.2, -1, 1);
   // cornering: drift when the corner needs more yaw than normal steering gives
   const need = Math.abs(kFar) * speed, dirK = Math.sign(kFar);
-  if (!b.drift && need > 1.15 && speed > 22 && car.grounded && Math.random() < b.d.drift && Math.sign(ang) === dirK && !f.sticky) { b.drift = true; b.driftDir = dirK; }
+  if (!b.drift && need > 0.85 && speed > 22 && car.grounded && Math.random() < b.d.drift && Math.sign(ang) === dirK && !f.sticky) { b.drift = true; b.driftDir = dirK; }
   if (b.drift) {
     out.dr = true;
     if (!car.drifting) out.st = b.driftDir;
-    if (ang * b.driftDir < -0.12 || need < 0.55 || car.spinT > 0 || (car.driftLevel() === 3 && need < 0.9)) { b.drift = false; out.dr = false; }
+    if (ang * b.driftDir < -0.12 || need < 0.4 || car.spinT > 0 || (car.driftLevel() === 3 && need < 0.9)) { b.drift = false; out.dr = false; }
   }
   if (need > 2.3 && !f.sticky) out.th = need > 2.9 ? -1 : 0;
   if (brake) out.th = speed > 9 ? -1 : 0.25;

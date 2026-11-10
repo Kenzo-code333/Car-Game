@@ -95,6 +95,13 @@ export function stepCar(car, inp, dt, world, t) {
     if (!f.sticky) vel.y -= TU.gravity * dt;
   } else {
     vel.y -= TU.gravity * dt;
+    // gentle air assist: keep the car lined up with the road below so jumps on curves stay fair
+    if (f.h > -2 && f.h < 30 && Math.abs(f.lat) < f.hw + 8 && !world.isArena) {
+      const vlat = vel.dot(f.R), k = Math.min(1, dt * 3.5);
+      vel.addScaledVector(f.R, -vlat * k);
+      _v.copy(vel).addScaledVector(up, -vel.dot(up));
+      if (_v.lengthSq() > 25) fwd.lerp(_v.normalize(), Math.min(1, dt * 4)).normalize();
+    }
     if (car.airTime > 0.16 && !car.frozen && car.spinT <= 0) {
       trickAxis(car, 'trkP', 'trkPV', Math.abs(inp.ty) > 0.5 ? Math.sign(inp.ty) : 0, dt);
       trickAxis(car, 'trkY', 'trkYV', Math.abs(inp.st) > 0.5 ? Math.sign(inp.st) : 0, dt);
@@ -110,7 +117,7 @@ export function stepCar(car, inp, dt, world, t) {
     if (pen <= 0.05 && pen > -3) {
       pos.addScaledVector(f.U, -pen);
       const climb = (f.gh - car.lastGh) / dt;
-      if (wasG && f.gh > 0 && climb > 0) vel.addScaledVector(f.U, climb - vn);
+      if (wasG && f.gh > 0 && climb > 0) vel.addScaledVector(f.U, Math.min(climb, car.rampCap || 12) - vn);
       else if (vn < 0) vel.addScaledVector(f.U, -vn);
       if (!wasG) land(car, -vn);
       car.grounded = true;

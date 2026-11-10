@@ -2,7 +2,7 @@ import { path, ring } from './builder.js';
 
 export const volcanoRace = {
   id: 'volcano-race', name: 'Magma Ring', world: 'volcano', type: 'race', closed: true, width: 15, rails: true,
-  points: ring(32, (a) => { const r = 185 * (1 + 0.15 * Math.sin(2 * a) + 0.07 * Math.cos(5 * a)); return [r * Math.cos(a), 9 + 6 * Math.sin(3 * a), r * Math.sin(a)]; }),
+  points: ring(32, (a) => { const r = 175 * (1 + 0.2 * Math.sin(2 * a) + 0.14 * Math.cos(5 * a)); return [r * Math.cos(a), 9 + 6 * Math.sin(3 * a), r * Math.sin(a)]; }),
   items: [0.09, 0.34, 0.6, 0.85],
   gaps: [{ at: 0.52, len: 15, collapse: true }],
   obstacles: [

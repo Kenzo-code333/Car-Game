@@ -273,7 +273,7 @@ export class Track {
     if (this.ramps.length) {
       for (const r of this.ramps) {
         const ds = this.wrapD(out.s - r.s0);
-        if (ds >= 0 && ds <= r.len && Math.abs(out.lat - r.lat) <= r.hw) { out.gh = r.H * (ds / r.len); break; }
+        if (ds >= 0 && ds <= r.len && Math.abs(out.lat - r.lat) <= r.hw) { out.gh = r.H * (ds / r.len); car.rampCap = 7 + 1.6 * r.H; break; }
       }
     }
     return out;

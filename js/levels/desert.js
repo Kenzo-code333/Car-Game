@@ -2,7 +2,7 @@ import { path, ring } from './builder.js';
 
 export const desertRace = {
   id: 'desert-race', name: 'Canyon Run', world: 'desert', type: 'race', closed: true, width: 15, rails: true,
-  points: ring(30, (a) => { const r = 190 * (1 + 0.2 * Math.sin(3 * a)); return [r * Math.cos(a), 9 + 8 * Math.sin(2 * a + 1), r * Math.sin(a)]; }),
+  points: ring(30, (a) => { const r = 172 * (1 + 0.27 * Math.sin(3 * a)); return [r * Math.cos(a), 9 + 8 * Math.sin(2 * a + 1), r * Math.sin(a)]; }),
   items: [0.1, 0.36, 0.62, 0.86],
   norail: [[0.46, 0.56]],
   gaps: [{ at: 0.502, len: 15 }],
